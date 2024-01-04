@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login } = require('../Controller/authController');
+const { register, login, logout } = require('../Controller/authController');
 const {
   getAllUsers,
   getSingleUsers,
@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.route('/register').post(register);
 router.route('/login').post(login);
+router.route('/logout').get(logout);
 
 router.route('/getAllUsers').get(getAllUsers);
 router

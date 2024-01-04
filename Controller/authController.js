@@ -27,7 +27,7 @@ const login = async (req, res) => {
     }
     const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) {
-      return res.status(402).json({ msg: 'Invalid Credentails' });
+      return res.status(403).json({ msg: 'Invalid Credentails' });
     }
     const token = user.getJWTToken();
     res.cookie('token', token, {
@@ -35,10 +35,28 @@ const login = async (req, res) => {
       httpOnly: true,
       // secure: process.env.NODE_ENV === 'production', // Set to true in production for HTTPS
     });
-    res.status(201).json({ msg: 'login successfully', token });
+    res.status(200).json({ msg: 'login successfully', token });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
 };
 
-module.exports = { register, login };
+const logout = async (req, res) => {
+  try {
+    res.cookie('token', null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Logged Out Successfully',
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: error,
+    });
+  }
+};
+
+module.exports = { register, login, logout };
